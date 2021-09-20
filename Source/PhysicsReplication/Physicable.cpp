@@ -55,7 +55,7 @@ void APhysicable::Tick(float DeltaTime)
 
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *VelocityDifference.ToString());
 			
-	if (GetLocalRole() == ROLE_Authority)
+	if (GetWorld()->GetNetMode() != NM_Client)
 	{
 		if(Mesh->GetPhysicsLinearVelocity().SizeSquared() > 10.f)
 		{
@@ -74,7 +74,7 @@ void APhysicable::Tick(float DeltaTime)
 			);
 		/////////////////////////////////
 	}
-	else if(GetLocalRole() == ROLE_SimulatedProxy)
+	else
 	{
 		/////////////////////////////////
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
@@ -150,7 +150,7 @@ float APhysicable::VelocityToDerivative() const
 
 void APhysicable::OnRep_PhysicsState()
 {
-	if(GetLocalRole() == ROLE_SimulatedProxy)
+	if (GetWorld()->GetNetMode() == NM_Client)
 	{
 		SimulatedProxy_PhysicsState();
 	}

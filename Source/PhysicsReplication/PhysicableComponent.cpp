@@ -12,15 +12,16 @@ UPhysicableComponent::UPhysicableComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	bTickBeforeOwner = true;
-
-	Owner = GetOwner() ? GetOwner() : nullptr;
-	PrimitiveComponent = Owner ? Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent()) : nullptr;
+	SetIsReplicated(true);
 }
 
 void UPhysicableComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Owner = GetOwner() ? GetOwner() : nullptr;
+	PrimitiveComponent = Owner ? Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent()) : nullptr;
+	
 	// Set up delegates
 	OnPhysScenePreTickHandle = GetWorld()->GetPhysicsScene()->OnPhysScenePreTick.AddUObject(this, &UPhysicableComponent::PreTick);
 	OnPhysSceneStepHandle = GetWorld()->GetPhysicsScene()->OnPhysSceneStep.AddUObject(this, &UPhysicableComponent::TickPhysics);
@@ -42,16 +43,8 @@ void UPhysicableComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void UPhysicableComponent::PreTick(FPhysScene* PhysScene, float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PreTick") );
-
 	if(PrimitiveComponent && PrimitiveComponent->IsSimulatingPhysics())
 	{
-		/////////////////////////////////
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-			FString::Printf(TEXT("Server %s"), *PrimitiveComponent->GetComponentVelocity().ToString())
-			);
-		/////////////////////////////////
-		
 		UpdateState(DeltaTime);
 	}
 }
@@ -59,20 +52,13 @@ void UPhysicableComponent::PreTick(FPhysScene* PhysScene, float DeltaTime)
 void UPhysicableComponent::TickPhysics(FPhysScene* PhysScene, float DeltaTime)
 {
 	UE_LOG(LogTemp, Warning, TEXT("TickPhysics") );
-	
 }
 
 void UPhysicableComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	/////////////////////////////////
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-		FString::Printf(TEXT("HI"))
-		);
-	/////////////////////////////////
-	
-	if ( Owner->GetLocalRole() == ROLE_SimulatedProxy )
+		
+	if (GetWorld()->GetNetMode() == NM_Client)
 	{
 		Owner->SetActorTransform(PhysicsState.Transform);
 
@@ -98,11 +84,17 @@ void UPhysicableComponent::RegisterComponentTickFunctions(bool bRegister)
 
 void UPhysicableComponent::UpdateState(float DeltaTime)
 {
-	if ( Owner->GetLocalRole() == ROLE_Authority )
+	if (GetWorld()->GetNetMode() != NM_Client)
 	{
 		PhysicsState.Transform = Owner->GetActorTransform();
 		PhysicsState.Velocity = GetOwner()->GetVelocity();
 		PhysicsState.ServerDeltaTime = DeltaTime;
+
+		/////////////////////////////////
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green,
+			FString::Printf(TEXT("Server %s"), *Owner->GetActorTransform().ToString())
+			);
+		/////////////////////////////////
 	}
 }
 

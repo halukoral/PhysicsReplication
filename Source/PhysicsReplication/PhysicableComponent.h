@@ -7,7 +7,7 @@
 #include "PhysicableComponent.generated.h"
 
 USTRUCT()
-struct FPhysicsState
+struct PHYSICSREPLICATION_API FPhysicsState
 {
 	GENERATED_BODY()
 
@@ -90,7 +90,7 @@ private:
 
 	/** Current velocity of updated component. */
 	FVector					Velocity;
-
+	
 	/**
 	* If true, after registration we will add a tick dependency to tick before our owner (if we can both tick).
 	* This is important when our tick causes an update in the owner's position, so that when the owner ticks it uses the most recent position without lag.

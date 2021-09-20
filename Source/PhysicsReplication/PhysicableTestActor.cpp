@@ -15,7 +15,6 @@ APhysicableTestActor::APhysicableTestActor()
 	PhysicableComponent = CreateDefaultSubobject<UPhysicableComponent>(TEXT("PhysicableComponent"));
 
 	bReplicates = true;
-	PhysicableComponent->SetIsReplicated(true);
 }
 
 void APhysicableTestActor::BeginPlay()
@@ -28,6 +27,12 @@ void APhysicableTestActor::BeginPlay()
 		// replicated to us. We need to turn off physics simulation for clients.
 		Mesh->SetSimulatePhysics(false);
 		Mesh->SetEnableGravity(false);
+
+		/////////////////////////////////
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green,
+			FString::Printf(TEXT("LAN NOLUYO YAA"))
+			);
+		/////////////////////////////////
 	}
 	else
 	{
