@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PhysicableTestActor.generated.h"
 
-class UPhysicableComponent;
+class UPhysicsMovementComponent;
 UCLASS()
 class PHYSICSREPLICATION_API APhysicableTestActor : public AActor
 {
@@ -29,5 +29,5 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent*	Mesh { nullptr };
 	
-	UPhysicableComponent*	PhysicableComponent { nullptr };
+	UPhysicsMovementComponent*	PhysicableComponent { nullptr };
 };

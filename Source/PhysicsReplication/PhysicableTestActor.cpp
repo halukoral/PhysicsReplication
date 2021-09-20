@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PhysicableTestActor.h"
-#include "PhysicableComponent.h"
+#include "PhysicsMovementComponent.h"
 
 APhysicableTestActor::APhysicableTestActor()
 {
@@ -12,7 +12,7 @@ APhysicableTestActor::APhysicableTestActor()
 	Mesh->SetSimulatePhysics(false);
 	RootComponent = Mesh;
 	
-	PhysicableComponent = CreateDefaultSubobject<UPhysicableComponent>(TEXT("PhysicableComponent"));
+	PhysicableComponent = CreateDefaultSubobject<UPhysicsMovementComponent>(TEXT("PhysicableComponent"));
 
 	bReplicates = true;
 }
