@@ -6,12 +6,9 @@
 APhysicableMeshServer::APhysicableMeshServer()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
-	RootComponent = Scene;
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+	RootComponent = Mesh;
 	
 	bReplicates = true;
 	SetReplicateMovement(true);

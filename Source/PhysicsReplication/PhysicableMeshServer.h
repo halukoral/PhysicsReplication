@@ -26,8 +26,5 @@ public:
 private:
 	
 	UPROPERTY(EditAnywhere)
-	USceneComponent* Scene { nullptr };
-	
-	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent*	Mesh { nullptr };
 };

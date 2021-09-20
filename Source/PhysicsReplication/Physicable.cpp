@@ -68,9 +68,19 @@ void APhysicable::Tick(float DeltaTime)
 			VelocityDifference = FVector::ZeroVector;
 			LastVelocity = FVector::ZeroVector;
 		}
+		/////////////////////////////////
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+			FString::Printf(TEXT("Server %s"), *PhysicsState.Transform.GetLocation().ToString())
+			);
+		/////////////////////////////////
 	}
 	else if(GetLocalRole() == ROLE_SimulatedProxy)
 	{
+		/////////////////////////////////
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+			FString::Printf(TEXT("Server %s"), *GetActorLocation().ToString())
+			);
+		/////////////////////////////////
 		ClientTick(DeltaTime);
 	}
 }
@@ -99,7 +109,8 @@ void APhysicable::UpdatePhysicsState(float DeltaTime)
 {
 	PhysicsState.Transform  = Mesh->GetComponentTransform();
 	PhysicsState.Velocity	= VelocityDifference;
-	PhysicsState.DeltaTime	= DeltaTime;
+	PhysicsState.ServerDeltaTime	= DeltaTime;
+	OnRep_PhysicsState();
 }
 
 FHermiteCubicSpline APhysicable::CreateSpline() const

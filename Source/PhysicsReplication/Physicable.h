@@ -7,7 +7,7 @@
 #include "Physicable.generated.h"
 
 USTRUCT()
-struct FPhysicsState
+struct FPhysicsStateActor
 {
 	GENERATED_BODY()
 
@@ -18,13 +18,13 @@ struct FPhysicsState
 	FVector Velocity;
 
 	UPROPERTY()
-	float	DeltaTime;
+	float	ServerDeltaTime;
 
-	FPhysicsState()
+	FPhysicsStateActor()
 	{
 		Transform		= FTransform::Identity;
 		Velocity		= FVector::ZeroVector;
-		DeltaTime		= 0.f;
+		ServerDeltaTime		= 0.f;
 	}
 };
 
@@ -84,11 +84,11 @@ public:
 	void					OnRep_PhysicsState();	/** The object orientation on the server */
 	
 	UPROPERTY(ReplicatedUsing = OnRep_PhysicsState)
-	FPhysicsState			PhysicsState;
+	FPhysicsStateActor			PhysicsState;
 	
 private:
 
-	TArray<FPhysicsState>	UnacknowledgedPhysicsStates;
+	TArray<FPhysicsStateActor>	UnacknowledgedPhysicsStates;
 
 	
 	float 					ClientSimulatedTime { 0 };
